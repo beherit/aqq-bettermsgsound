@@ -1,0 +1,10 @@
+# use glob syntax.
+syntax: glob
+
+*.aqq
+*.local
+__history\*
+Win32\Release\*
+Win32\Debug\*
+Win64\Release\*
+Win64\Debug\*

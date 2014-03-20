@@ -55,13 +55,6 @@ INT_PTR __stdcall OnRecvMsg(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam);
 //---------------------------------------------------------------------------
 
-//Pobieranie sciezki katalogu prywatnego wtyczek
-UnicodeString GetPluginUserDir()
-{
-  return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,0,0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
-}
-//---------------------------------------------------------------------------
-
 //Sprawdzanie czy dziwieki zostaly wlaczone
 bool ChkSoundEnabled()
 {
@@ -197,7 +190,7 @@ INT_PTR __stdcall OnRecvMsg(WPARAM wParam, LPARAM lParam)
 	}
 	UnicodeString UserIdx = ":" + IntToStr(RecvMsgContact.UserIdx);
 	//Zakladka z kontaktem nie jest otwarta || okno rozmowy jest nieaktywne || wlaczony tryb auto-oddalenia
-	if((TabsList->IndexOf(JID+Res+UserIdx)==-1)||(hFrmSend!=GetActiveWindow())||(AutoAwayMode))
+	if((TabsList->IndexOf(JID+Res+UserIdx)==-1)||(hFrmSend!=GetForegroundWindow())||(AutoAwayMode))
 	{
 	  //Pobieranie danych wiadomosci
 	  TPluginMessage RecvMsgMessage = *(PPluginMessage)lParam;
@@ -243,7 +236,7 @@ INT_PTR __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam)
 }
 //---------------------------------------------------------------------------
 
-extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
+extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 {
   //Linkowanie wtyczki z komunikatorem
   PluginLink = *Link;
@@ -304,7 +297,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 }
 //---------------------------------------------------------------------------
 
-extern "C" int __declspec(dllexport) __stdcall Unload()
+extern "C" INT_PTR __declspec(dllexport) __stdcall Unload()
 {
   //Ponowne wlaczenie dzwieku przychodzacej wiadomosci (o ile wczesniej byl wlaczony)
   if((SoundFirstInActiveChk)||(SoundInActiveChk))
@@ -341,11 +334,11 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"BetterMsgSound";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,0,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,2,0);
   PluginInfo.Description = L"Udoskonala dŸwiêkow¹ informacjê o nowej wiadomoœci poprzez odtwarzanie jej tylko gdy okno rozmowy bêdzie nieaktywne lub zak³adka z kontaktem nie bêdzie otwarta oraz kiedy bêdziemy nieaktywni.";
-  PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.Author = L"Krzysztof Grochocki";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
-  PluginInfo.Copyright = L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.Copyright = L"Krzysztof Grochocki";
   PluginInfo.Homepage = L"http://beherit.pl";
   PluginInfo.Flag = 0;
   PluginInfo.ReplaceDefaultModule = 0;

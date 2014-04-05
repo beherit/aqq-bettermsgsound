@@ -33,6 +33,12 @@
         <Cfg_1>true</Cfg_1>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win64)'!=''">
+        <Cfg_1_Win64>true</Cfg_1_Win64>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
         <Cfg_2>true</Cfg_2>
         <CfgParent>Base</CfgParent>
@@ -69,21 +75,21 @@
         <ILINK_TranslatedLibraryPath>$(BDSLIB)\$(PLATFORM)\release\$(LANGDIR);$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
-        <VerInfo_Release>2</VerInfo_Release>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <IncludePath>$(BDSINCLUDE)\windows\vcl;$(IncludePath)</IncludePath>
-        <VerInfo_Keys>FileVersion=1.0.2.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=1.1.0.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
         <PackageImports>acntXE5_R;adortl;bcbie;bcbsmp;bdertl;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CustomIPTransport;DataSnapCommon;dbexpress;dbrtl;dbxcds;DbxCommonDriver;DBXInterBaseDriver;dsnap;FireDAC;FireDACADSDriver;FireDACASADriver;FireDACCommon;FireDACCommonDriver;FireDACDataSnapDriver;FireDACDb2Driver;FireDACDBXDriver;FireDACIBDriver;FireDACMSAccDriver;FireDACMSSQLDriver;FireDACMySQLDriver;FireDACODBCDriver;FireDACOracleDriver;FireDACPgDriver;FireDACSqliteDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdbbde;inetdbxpress;MetropolisUILiveTile;RESTComponents;rtl;soaprtl;svn;Tee;TeeDB;TeeUI;vcl;vclactnband;vcldb;vcldbx;vcldsnap;vclFireDAC;vclie;vclimg;VCLRESTComponents;vclribbon;VclSmp;vcltouch;vclx;xmlrtl;$(PackageImports)</PackageImports>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
-        <VerInfo_Release>2</VerInfo_Release>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <BCC_PCHName_Clang>BetterMsgSound.h</BCC_PCHName_Clang>
         <IncludePath>$(BDSINCLUDE)\windows\vcl;$(IncludePath)</IncludePath>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>FileVersion=1.0.2.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=1.1.0.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
         <PackageImports>acntXE5_R;adortl;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CustomIPTransport;DataSnapCommon;dbexpress;dbrtl;dbxcds;DbxCommonDriver;DBXInterBaseDriver;dsnap;FireDAC;FireDACADSDriver;FireDACASADriver;FireDACCommon;FireDACCommonDriver;FireDACDataSnapDriver;FireDACDb2Driver;FireDACDBXDriver;FireDACIBDriver;FireDACMSAccDriver;FireDACMSSQLDriver;FireDACMySQLDriver;FireDACODBCDriver;FireDACOracleDriver;FireDACPgDriver;FireDACSqliteDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdbxpress;MetropolisUILiveTile;RESTComponents;rtl;soaprtl;Tee;TeeDB;TeeUI;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclie;vclimg;VCLRESTComponents;vclribbon;VclSmp;vcltouch;vclx;xmlrtl;$(PackageImports)</PackageImports>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
     </PropertyGroup>
@@ -110,17 +116,21 @@
         <ILINK_TranslatedLibraryPath>$(BDSLIB)\$(PLATFORM)\debug\$(LANGDIR);$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_Release>2</VerInfo_Release>
-        <VerInfo_Keys>FileVersion=1.0.2.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
+        <VerInfo_Keys>FileVersion=1.1.0.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
         <LinkPackageImports>rtl.bpi;vcl.bpi</LinkPackageImports>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
+        <VerInfo_Keys>FileVersion=1.1.0.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Defines>NDEBUG;$(Defines)</Defines>
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Release>2</VerInfo_Release>
-        <VerInfo_Keys>FileVersion=1.0.2.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
+        <VerInfo_Keys>FileVersion=1.1.0.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
         <DynamicRTL>false</DynamicRTL>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -128,9 +138,9 @@
         <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib</LinkPackageStatics>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-        <VerInfo_Release>2</VerInfo_Release>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib</LinkPackageStatics>
-        <VerInfo_Keys>FileVersion=1.0.2.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=1.1.0.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
         <BCC_PCHName_Clang>BetterMsgSound.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <ItemGroup>

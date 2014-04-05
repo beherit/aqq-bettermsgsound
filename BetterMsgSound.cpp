@@ -37,19 +37,19 @@ TPluginLink PluginLink;
 TPluginInfo PluginInfo;
 //Lista-JID-otwartych-zakladek-----------------------------------------------
 TStringList *TabsList = new TStringList;
+//Lista-JID-kontaktow-od-ktorych-otrzymano-wiadomosc-------------------------
+TStringList *MsgsList = new TStringList;
 //Tryb-auto-oddalenia--------------------------------------------------------
 bool AutoAwayMode = false;
 //Uchwyt-do-okna-rozmowy-----------------------------------------------------
 HWND hFrmSend;
-//Zapamietany-stan-wlaczenia-dzwieku-przychodzacej-wiadomosci----------------
-bool SoundFirstInActiveChk = false;
-bool SoundInActiveChk = false;
 //FORWARD-AQQ-HOOKS----------------------------------------------------------
 INT_PTR __stdcall OnActiveTab(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnAutoAwayOff(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnAutoAwayOn(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnCloseTab(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnFetchAllTabs(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnPlaySound(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnPrimaryTab(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnRecvMsg(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam);
@@ -66,6 +66,74 @@ bool ChkSoundEnabled()
   UnicodeString SoundOff = Settings->ReadString("Sound","SoundOff","0");
   delete Settings;
   return !StrToBool(SoundOff);
+}
+//---------------------------------------------------------------------------
+
+//Pobieranie sciezki kompozycji
+UnicodeString GetThemeDir()
+{
+  return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,0,0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+}
+//---------------------------------------------------------------------------
+
+//Pobieranie sciezki domyslnej kompozycji
+UnicodeString GetDefaultThemeDir()
+{
+  return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETAPPPATH,0,0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll) + "\\\\System\\\\Shared\\\\Themes\\\\Standard";
+}
+//---------------------------------------------------------------------------
+
+//Pobieranie adresu do pliku dzwiekowego pierwszej nowej wiadomosci
+UnicodeString GetFirstSoundPath()
+{
+  //Pobieranie sciezki kompozycji
+  UnicodeString ThemeDir = GetThemeDir();
+  //Plik MP3 z aktywnej kompozycji
+  if(FileExists(ThemeDir+"\\\\\Sound\\\\First.mp3"))
+   return ThemeDir+"\\\\\Sound\\\\First.mp3";
+  //Plik WAV z aktywnej kompozycji
+  else if(FileExists(ThemeDir+"\\\\\Sound\\\\First.mp3"))
+   return ThemeDir+"\\\\\Sound\\\\First.mp3";
+  //Pliki w domyslnej kompozycji
+  else
+  {
+	//Pobieranie sciezki domyslnej kompozycji
+	ThemeDir = GetDefaultThemeDir();
+	//Plik MP3 z domyslnej kompozycji
+	if(FileExists(ThemeDir+"\\\\\Sound\\\\First.mp3"))
+	 return ThemeDir+"\\\\\Sound\\\\First.mp3";
+	//Plik WAV z domyslnej kompozycji
+	else if(FileExists(ThemeDir+"\\\\\Sound\\\\First.mp3"))
+  	 return ThemeDir+"\\\\\Sound\\\\First.mp3";
+  }
+  return "";
+}
+//---------------------------------------------------------------------------
+
+//Pobieranie adresu do pliku dzwiekowego nowej wiadomosci
+UnicodeString GetInSoundPath()
+{
+  //Pobieranie sciezki kompozycji
+  UnicodeString ThemeDir = GetThemeDir();
+  //Plik MP3 z aktywnej kompozycji
+  if(FileExists(ThemeDir+"\\\\\Sound\\\\In.mp3"))
+   return ThemeDir+"\\\\\Sound\\\\In.mp3";
+  //Plik WAV z aktywnej kompozycji
+  else if(FileExists(ThemeDir+"\\\\\Sound\\\\In.mp3"))
+   return ThemeDir+"\\\\\Sound\\\\In.mp3";
+  //Pliki w domyslnej kompozycji
+  else
+  {
+	//Pobieranie sciezki domyslnej kompozycji
+	ThemeDir = GetDefaultThemeDir();
+	//Plik MP3 z domyslnej kompozycji
+	if(FileExists(ThemeDir+"\\\\\Sound\\\\In.mp3"))
+	 return ThemeDir+"\\\\\Sound\\\\In.mp3";
+	//Plik WAV z domyslnej kompozycji
+	else if(FileExists(ThemeDir+"\\\\\Sound\\\\In.mp3"))
+  	 return ThemeDir+"\\\\\Sound\\\\In.mp3";
+  }
+  return "";
 }
 //---------------------------------------------------------------------------
 
@@ -129,6 +197,9 @@ INT_PTR __stdcall OnCloseTab(WPARAM wParam, LPARAM lParam)
   //Usuwanie JID z listy aktywnych zakladek
   if(TabsList->IndexOf(JID+Res+UserIdx)!=-1)
    TabsList->Delete(TabsList->IndexOf(JID+Res+UserIdx));
+  //Usuwanie JID z listy kontaktow od ktorych otrzymano wiadomosc
+  if(MsgsList->IndexOf(JID+Res+UserIdx)!=-1)
+   MsgsList->Delete(MsgsList->IndexOf(JID+Res+UserIdx));
 
   return 0;
 }
@@ -155,6 +226,20 @@ INT_PTR __stdcall OnFetchAllTabs(WPARAM wParam, LPARAM lParam)
   //Dodawanie JID do listy otwartych zakladek
   if(TabsList->IndexOf(JID+Res+UserIdx)==-1)
    TabsList->Add(JID+Res+UserIdx);
+  //Dodawanie JID z listy kontaktow od ktorych otrzymano wiadomosc
+  if(MsgsList->IndexOf(JID+Res+UserIdx)==-1)
+   MsgsList->Add(JID+Res+UserIdx);
+
+  return 0;
+}
+//---------------------------------------------------------------------------
+
+//Hook na odtwarzanie dzwiekow
+INT_PTR __stdcall OnPlaySound(WPARAM wParam, LPARAM lParam)
+{
+  //Blokada dzwieku nowej wiadomosci
+  if((lParam==SOUND_FIRSTIN)||(lParam==SOUND_IN))
+   return 1;
 
   return 0;
 }
@@ -175,36 +260,45 @@ INT_PTR __stdcall OnPrimaryTab(WPARAM wParam, LPARAM lParam)
 //Hook na odbieranie wiadomosci
 INT_PTR __stdcall OnRecvMsg(WPARAM wParam, LPARAM lParam)
 {
-  //Dzwieki sa wlaczone
-  if(ChkSoundEnabled())
+  //Pobieranie danych wiadomosci
+  TPluginMessage RecvMsgMessage = *(PPluginMessage)lParam;
+  //Rodzaj wiadomosci
+  if(RecvMsgMessage.Kind!=MSGKIND_RTT)
   {
-	//Pobieranie danych kontaktu
-	TPluginContact RecvMsgContact = *(PPluginContact)wParam;
-	UnicodeString JID = (wchar_t*)RecvMsgContact.JID;
-	UnicodeString Res = (wchar_t*)RecvMsgContact.Resource;
-	if(!Res.IsEmpty()) Res = "/" + Res;
-	if(RecvMsgContact.IsChat)
+	//Wiadomosc nie jest pusta
+	if(!((UnicodeString)((wchar_t*)RecvMsgMessage.Body)).IsEmpty())
 	{
-	  JID = "ischat_" + JID;
-	  Res = "";
-	}
-	UnicodeString UserIdx = ":" + IntToStr(RecvMsgContact.UserIdx);
-	//Zakladka z kontaktem nie jest otwarta || okno rozmowy jest nieaktywne || wlaczony tryb auto-oddalenia
-	if((TabsList->IndexOf(JID+Res+UserIdx)==-1)||(hFrmSend!=GetForegroundWindow())||(AutoAwayMode))
-	{
-	  //Pobieranie danych wiadomosci
-	  TPluginMessage RecvMsgMessage = *(PPluginMessage)lParam;
-	  //Rodzaj wiadomosci
-	  if(RecvMsgMessage.Kind!=MSGKIND_RTT)
+	  //Pobieranie danych kontaktu
+	  TPluginContact RecvMsgContact = *(PPluginContact)wParam;
+	  UnicodeString JID = (wchar_t*)RecvMsgContact.JID;
+	  UnicodeString Res = (wchar_t*)RecvMsgContact.Resource;
+	  if(!Res.IsEmpty()) Res = "/" + Res;
+	  if(RecvMsgContact.IsChat)
 	  {
-		//Wiadomosc nie jest pusta
-		if(!((UnicodeString)((wchar_t*)RecvMsgMessage.Body)).IsEmpty())
+		JID = "ischat_" + JID;
+		Res = "";
+	  }
+	  UnicodeString UserIdx = ":" + IntToStr(RecvMsgContact.UserIdx);
+	  //Pierwsza wiadomosc od kontatku
+	  bool FirstMsg = false;
+	  if(MsgsList->IndexOf(JID+Res+UserIdx)==-1)
+	  {
+		MsgsList->Add(JID+Res+UserIdx);
+        FirstMsg = true;
+      }
+	  //Dzwieki sa wlaczone
+	  if(ChkSoundEnabled())
+	  {
+		//Zakladka z kontaktem nie jest otwarta || okno rozmowy jest nieaktywne || wlaczony tryb auto-oddalenia
+		if((TabsList->IndexOf(JID+Res+UserIdx)==-1)||(hFrmSend!=GetForegroundWindow())||(AutoAwayMode))
 		{
-		  //Wymuszenie odtworzenia dzwieku przychodzacej wiadomosci
-		  PluginLink.CallService(AQQ_SYSTEM_PLAYSOUND,SOUND_IN,1);
+		  //Odtworzenia dzwieku przychodzacej pierwszej wiadomosci
+		  if(FirstMsg) PluginLink.CallService(AQQ_SYSTEM_PLAYSOUND,(WPARAM)GetFirstSoundPath().w_str(),2);
+		  //Odtworzenia dzwieku przychodzacej wiadomosci
+		  else PluginLink.CallService(AQQ_SYSTEM_PLAYSOUND,(WPARAM)GetInSoundPath().w_str(),2);
 		}
 	  }
-    }
+	}
   }
 
   return 0;
@@ -221,12 +315,8 @@ INT_PTR __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam)
 
   //Otwarcie okna rozmowy
   if((ClassName=="TfrmSend")&&(Event==WINDOW_EVENT_CREATE))
-  {
-    //Uchwyt do okna nie zostal jeszcze przypisany
-	if(!hFrmSend)
-	 //Przypisanie uchwytu do okna rozmowy
-	 hFrmSend = (HWND)WindowEvent.Handle;
-  }
+   //Przypisanie uchwytu do okna rozmowy
+   hFrmSend = (HWND)WindowEvent.Handle;
   //Zamkniecie okna rozmowy
   if((ClassName=="TfrmSend")&&(Event==WINDOW_EVENT_CLOSE))
    //Usuniecie uchwytu do okna rozmowy
@@ -240,36 +330,6 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 {
   //Linkowanie wtyczki z komunikatorem
   PluginLink = *Link;
-  //Wylaczenie dzwieku przychodzacej wiadomosci + zapamietanie poczatkowego stanu wlaczenia tego dzwieku
-  TStrings* IniList = new TStringList();
-  IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
-  TMemIniFile* Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
-  Settings->SetStrings(IniList);
-  delete IniList;
-  UnicodeString SoundFirstInActive = Settings->ReadString("Sound","SoundFirstInActive","1");
-  UnicodeString SoundInActive = Settings->ReadString("Sound","SoundInActive","1");
-  if((StrToBool(SoundFirstInActive))||(StrToBool(SoundInActive)))
-  {
-	//Zapamietanie stanu dzwieku przychodzacej wiadomosci
-	SoundFirstInActiveChk = StrToBool(SoundFirstInActive);
-	SoundInActiveChk = StrToBool(SoundFirstInActive);
-	//Nowe ustawienia #1
-	TSaveSetup SaveSetup;
-	SaveSetup.Section = L"Sound";
-	SaveSetup.Ident = L"SoundFirstInActive";
-	SaveSetup.Value = L"0";
-	//Zapis ustawien #1
-	PluginLink.CallService(AQQ_FUNCTION_SAVESETUP,1,(LPARAM)(&SaveSetup));
-	//Nowe ustawienia #2
-	SaveSetup.Section = L"Sound";
-	SaveSetup.Ident = L"SoundInActive";
-	SaveSetup.Value = L"0";
-	//Zapis ustawien #2
-	PluginLink.CallService(AQQ_FUNCTION_SAVESETUP,1,(LPARAM)(&SaveSetup));
-	//Odswiezenie ustawien
-	PluginLink.CallService(AQQ_FUNCTION_REFRESHSETUP,0,0);
-  }
-  delete Settings;
   //Hook na aktwyna zakladke lub okno rozmowy
   PluginLink.HookEvent(AQQ_CONTACTS_BUDDY_ACTIVETAB,OnActiveTab);
   //Hook na wylaczenie auto-oddalania
@@ -278,8 +338,12 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
   PluginLink.HookEvent(AQQ_SYSTEM_AUTOMATION_AUTOAWAY_ON,OnAutoAwayOn);
   //Hook na zamkniecie okna rozmowy lub zakladki
   PluginLink.HookEvent(AQQ_CONTACTS_BUDDY_CLOSETAB,OnCloseTab);
+  //Hook na odtwarzanie dzwiekow
+  PluginLink.HookEvent(AQQ_SYSTEM_PLAYSOUND,OnPlaySound);
   //Hook na odbieranie nowej wiadomosci
   PluginLink.HookEvent(AQQ_CONTACTS_RECVMSG,OnRecvMsg);
+  //Hook na zamkniecie/otwarcie okien
+  PluginLink.HookEvent(AQQ_SYSTEM_WINDOWEVENT,OnWindowEvent);
   //Wszystkie moduly zostaly zaladowane
   if(PluginLink.CallService(AQQ_SYSTEM_MODULESLOADED,0,0))
   {
@@ -299,31 +363,14 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 
 extern "C" INT_PTR __declspec(dllexport) __stdcall Unload()
 {
-  //Ponowne wlaczenie dzwieku przychodzacej wiadomosci (o ile wczesniej byl wlaczony)
-  if((SoundFirstInActiveChk)||(SoundInActiveChk))
-  {
-	//Nowe ustawienia #1
-	TSaveSetup SaveSetup;
-	SaveSetup.Section = L"Sound";
-	SaveSetup.Ident = L"SoundFirstInActive";
-	SaveSetup.Value = BoolToStr(SoundFirstInActiveChk).w_str();
-	//Zapis ustawien #1
-	PluginLink.CallService(AQQ_FUNCTION_SAVESETUP,1,(LPARAM)(&SaveSetup));
-	//Nowe ustawienia #2
-	SaveSetup.Section = L"Sound";
-	SaveSetup.Ident = L"SoundInActive";
-	SaveSetup.Value = BoolToStr(SoundInActiveChk).w_str();
-	//Zapis ustawien #2
-	PluginLink.CallService(AQQ_FUNCTION_SAVESETUP,1,(LPARAM)(&SaveSetup));
-	//Odswiezenie ustawien
-	PluginLink.CallService(AQQ_FUNCTION_REFRESHSETUP,0,0);
-  }
   //Wyladowanie wszystkich hookow
   PluginLink.UnhookEvent(OnActiveTab);
   PluginLink.UnhookEvent(OnAutoAwayOff);
   PluginLink.UnhookEvent(OnAutoAwayOn);
   PluginLink.UnhookEvent(OnCloseTab);
+  PluginLink.UnhookEvent(OnPlaySound);
   PluginLink.UnhookEvent(OnRecvMsg);
+  PluginLink.UnhookEvent(OnWindowEvent);
 
   return 0;
 }
@@ -334,7 +381,7 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"BetterMsgSound";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,2,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,1,0,0);
   PluginInfo.Description = L"Udoskonala dŸwiêkow¹ informacjê o nowej wiadomoœci poprzez odtwarzanie jej tylko gdy okno rozmowy bêdzie nieaktywne lub zak³adka z kontaktem nie bêdzie otwarta oraz kiedy bêdziemy nieaktywni.";
   PluginInfo.Author = L"Krzysztof Grochocki";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";

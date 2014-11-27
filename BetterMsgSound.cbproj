@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{377FF8FB-6C07-48D5-90C0-E337D8AE9662}</ProjectGuid>
-        <ProjectVersion>15.1</ProjectVersion>
+        <ProjectVersion>16.0</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
@@ -57,6 +57,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <SanitizedProjectName>BetterMsgSound</SanitizedProjectName>
         <_TCHARMapping>wchar_t</_TCHARMapping>
         <VerInfo_Locale>1045</VerInfo_Locale>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
@@ -129,6 +130,7 @@
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <ILINK_LibraryPath>$(BDS)\lib\win32\release\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_Keys>FileVersion=1.1.0.0;LegalCopyright=Krzysztof Grochocki;ProductVersion=1.0.0.0;ProductName=BetterMsgSound;LegalTrademarks=Krzysztof Grochocki;CompanyName=Beherit Development</VerInfo_Keys>
         <DynamicRTL>false</DynamicRTL>
@@ -221,6 +223,7 @@
                     <ProjectProperties Name="AutoShowDeps">False</ProjectProperties>
                     <ProjectProperties Name="ManagePaths">True</ProjectProperties>
                     <ProjectProperties Name="VerifyPackages">True</ProjectProperties>
+                    <ProjectProperties Name="IndexFiles">False</ProjectProperties>
                 </ProjectProperties>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\bcboffice2k190.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>

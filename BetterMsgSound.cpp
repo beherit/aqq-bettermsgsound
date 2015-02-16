@@ -104,7 +104,7 @@ UnicodeString GetFirstSoundPath()
 			return ThemeDir+"\\\\\Sound\\\\First.mp3";
 		//Plik WAV z domyslnej kompozycji
 		else if(FileExists(ThemeDir+"\\\\\Sound\\\\First.mp3"))
-				return ThemeDir+"\\\\\Sound\\\\First.mp3";
+			return ThemeDir+"\\\\\Sound\\\\First.mp3";
 	}
 	return "";
 }
@@ -131,7 +131,7 @@ UnicodeString GetInSoundPath()
 			return ThemeDir+"\\\\\Sound\\\\In.mp3";
 		//Plik WAV z domyslnej kompozycji
 		else if(FileExists(ThemeDir+"\\\\\Sound\\\\In.mp3"))
-				return ThemeDir+"\\\\\Sound\\\\In.mp3";
+			return ThemeDir+"\\\\\Sound\\\\In.mp3";
 	}
 	return "";
 }

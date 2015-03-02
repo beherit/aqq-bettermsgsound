@@ -238,8 +238,32 @@ INT_PTR __stdcall OnPlaySound(WPARAM wParam, LPARAM lParam)
 {
 	//Dzwiek nowej wiadomosci
 	if((lParam==SOUND_FIRSTIN)||(lParam==SOUND_IN))
-		//Blokada
+	{
+		//Pobieranie klasy kontrolki spod kursora
+		HWND hActiveControl = WindowFromPoint(Mouse->CursorPos);
+		wchar_t ClassNameW[512];
+		GetClassNameW(hActiveControl, ClassNameW, sizeof(ClassNameW));
+		if((UnicodeString)ClassNameW=="TsButton")
+		{
+			hActiveControl = GetParent(hActiveControl);
+			GetClassNameW(hActiveControl, ClassNameW, sizeof(ClassNameW));
+			if((UnicodeString)ClassNameW=="TsPanel")
+			{
+				hActiveControl = GetParent(hActiveControl);
+				GetClassNameW(hActiveControl, ClassNameW, sizeof(ClassNameW));
+				if((UnicodeString)ClassNameW=="TsPanel")
+				{
+					hActiveControl = GetParent(hActiveControl);
+					GetClassNameW(hActiveControl, ClassNameW, sizeof(ClassNameW));
+					if((UnicodeString)ClassNameW=="TfrmSettings")
+						//Zezwolenie na otwarzanie dzwieku
+						return 0;
+				}
+			}
+		}
+		//Blokada otwarzania dzwieku
 		return 1;
+	}
 
 	return 0;
 }

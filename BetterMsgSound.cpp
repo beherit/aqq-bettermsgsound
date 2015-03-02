@@ -91,8 +91,8 @@ UnicodeString GetFirstSoundPath()
 	if(FileExists(ThemeDir + "\\\\\Sound\\\\First.mp3"))
 		return ThemeDir + "\\\\\Sound\\\\First.mp3";
 	//Plik WAV z aktywnej kompozycji
-	else if(FileExists(ThemeDir + "\\\\\Sound\\\\First.mp3"))
-		return ThemeDir + "\\\\\Sound\\\\First.mp3";
+	else if(FileExists(ThemeDir + "\\\\\Sound\\\\First.wav"))
+		return ThemeDir + "\\\\\Sound\\\\First.wav";
 	//Pliki w domyslnej kompozycji
 	else
 	{
@@ -102,8 +102,8 @@ UnicodeString GetFirstSoundPath()
 		if(FileExists(ThemeDir + "\\\\\Sound\\\\First.mp3"))
 			return ThemeDir + "\\\\\Sound\\\\First.mp3";
 		//Plik WAV z domyslnej kompozycji
-		else if(FileExists(ThemeDir + "\\\\\Sound\\\\First.mp3"))
-			return ThemeDir + "\\\\\Sound\\\\First.mp3";
+		else if(FileExists(ThemeDir + "\\\\\Sound\\\\First.wav"))
+			return ThemeDir + "\\\\\Sound\\\\First.wav";
 	}
 	return "";
 }
@@ -118,8 +118,8 @@ UnicodeString GetInSoundPath()
 	if(FileExists(ThemeDir + "\\\\\Sound\\\\In.mp3"))
 		return ThemeDir + "\\\\\Sound\\\\In.mp3";
 	//Plik WAV z aktywnej kompozycji
-	else if(FileExists(ThemeDir + "\\\\\Sound\\\\In.mp3"))
-		return ThemeDir + "\\\\\Sound\\\\In.mp3";
+	else if(FileExists(ThemeDir + "\\\\\Sound\\\\In.wav"))
+		return ThemeDir + "\\\\\Sound\\\\In.wav";
 	//Pliki w domyslnej kompozycji
 	else
 	{
@@ -129,8 +129,8 @@ UnicodeString GetInSoundPath()
 		if(FileExists(ThemeDir + "\\\\\Sound\\\\In.mp3"))
 			return ThemeDir + "\\\\\Sound\\\\In.mp3";
 		//Plik WAV z domyslnej kompozycji
-		else if(FileExists(ThemeDir + "\\\\\Sound\\\\In.mp3"))
-			return ThemeDir + "\\\\\Sound\\\\In.mp3";
+		else if(FileExists(ThemeDir + "\\\\\Sound\\\\In.wav"))
+			return ThemeDir + "\\\\\Sound\\\\In.wav";
 	}
 	return "";
 }

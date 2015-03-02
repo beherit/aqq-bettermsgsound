@@ -1,3 +1,8 @@
+1.1.2.0
+-----
+* Poprawne odtwarzanie dźwięków z kompozycji w formacie WAV.
+* Nie blokowanie podglądu dźwięku w ustawieniach AQQ.
+
 1.1.0.0
 -----
 * Odtwarzanie dźwięku pierwszej nowej wiadomości.

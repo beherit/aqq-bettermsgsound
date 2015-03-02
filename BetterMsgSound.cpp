@@ -58,11 +58,11 @@ INT_PTR __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam);
 bool ChkSoundEnabled()
 {
 	TStrings* IniList = new TStringList();
-	IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
+	IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP, 0, 0));
 	TMemIniFile *Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
 	Settings->SetStrings(IniList);
 	delete IniList;
-	UnicodeString SoundOff = Settings->ReadString("Sound","SoundOff","0");
+	UnicodeString SoundOff = Settings->ReadString("Sound", "SoundOff", "0");
 	delete Settings;
 	return !StrToBool(SoundOff);
 }
@@ -71,14 +71,14 @@ bool ChkSoundEnabled()
 //Pobieranie sciezki kompozycji
 UnicodeString GetThemeDir()
 {
-	return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,0,0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+	return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR, 0, 0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 }
 //---------------------------------------------------------------------------
 
 //Pobieranie sciezki domyslnej kompozycji
 UnicodeString GetDefaultThemeDir()
 {
-	return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETAPPPATH,0,0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll) + "\\\\System\\\\Shared\\\\Themes\\\\Standard";
+	return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETAPPPATH, 0, 0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll) + "\\\\System\\\\Shared\\\\Themes\\\\Standard";
 }
 //---------------------------------------------------------------------------
 
@@ -88,22 +88,22 @@ UnicodeString GetFirstSoundPath()
 	//Pobieranie sciezki kompozycji
 	UnicodeString ThemeDir = GetThemeDir();
 	//Plik MP3 z aktywnej kompozycji
-	if(FileExists(ThemeDir+"\\\\\Sound\\\\First.mp3"))
-		return ThemeDir+"\\\\\Sound\\\\First.mp3";
+	if(FileExists(ThemeDir + "\\\\\Sound\\\\First.mp3"))
+		return ThemeDir + "\\\\\Sound\\\\First.mp3";
 	//Plik WAV z aktywnej kompozycji
-	else if(FileExists(ThemeDir+"\\\\\Sound\\\\First.mp3"))
-		return ThemeDir+"\\\\\Sound\\\\First.mp3";
+	else if(FileExists(ThemeDir + "\\\\\Sound\\\\First.mp3"))
+		return ThemeDir + "\\\\\Sound\\\\First.mp3";
 	//Pliki w domyslnej kompozycji
 	else
 	{
 		//Pobieranie sciezki domyslnej kompozycji
 		ThemeDir = GetDefaultThemeDir();
 		//Plik MP3 z domyslnej kompozycji
-		if(FileExists(ThemeDir+"\\\\\Sound\\\\First.mp3"))
-			return ThemeDir+"\\\\\Sound\\\\First.mp3";
+		if(FileExists(ThemeDir + "\\\\\Sound\\\\First.mp3"))
+			return ThemeDir + "\\\\\Sound\\\\First.mp3";
 		//Plik WAV z domyslnej kompozycji
-		else if(FileExists(ThemeDir+"\\\\\Sound\\\\First.mp3"))
-			return ThemeDir+"\\\\\Sound\\\\First.mp3";
+		else if(FileExists(ThemeDir + "\\\\\Sound\\\\First.mp3"))
+			return ThemeDir + "\\\\\Sound\\\\First.mp3";
 	}
 	return "";
 }
@@ -115,22 +115,22 @@ UnicodeString GetInSoundPath()
 	//Pobieranie sciezki kompozycji
 	UnicodeString ThemeDir = GetThemeDir();
 	//Plik MP3 z aktywnej kompozycji
-	if(FileExists(ThemeDir+"\\\\\Sound\\\\In.mp3"))
-		return ThemeDir+"\\\\\Sound\\\\In.mp3";
+	if(FileExists(ThemeDir + "\\\\\Sound\\\\In.mp3"))
+		return ThemeDir + "\\\\\Sound\\\\In.mp3";
 	//Plik WAV z aktywnej kompozycji
-	else if(FileExists(ThemeDir+"\\\\\Sound\\\\In.mp3"))
-		return ThemeDir+"\\\\\Sound\\\\In.mp3";
+	else if(FileExists(ThemeDir + "\\\\\Sound\\\\In.mp3"))
+		return ThemeDir + "\\\\\Sound\\\\In.mp3";
 	//Pliki w domyslnej kompozycji
 	else
 	{
 		//Pobieranie sciezki domyslnej kompozycji
 		ThemeDir = GetDefaultThemeDir();
 		//Plik MP3 z domyslnej kompozycji
-		if(FileExists(ThemeDir+"\\\\\Sound\\\\In.mp3"))
-			return ThemeDir+"\\\\\Sound\\\\In.mp3";
+		if(FileExists(ThemeDir + "\\\\\Sound\\\\In.mp3"))
+			return ThemeDir + "\\\\\Sound\\\\In.mp3";
 		//Plik WAV z domyslnej kompozycji
-		else if(FileExists(ThemeDir+"\\\\\Sound\\\\In.mp3"))
-			return ThemeDir+"\\\\\Sound\\\\In.mp3";
+		else if(FileExists(ThemeDir + "\\\\\Sound\\\\In.mp3"))
+			return ThemeDir + "\\\\\Sound\\\\In.mp3";
 	}
 	return "";
 }
@@ -331,27 +331,27 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 	//Linkowanie wtyczki z komunikatorem
 	PluginLink = *Link;
 	//Hook na aktwyna zakladke lub okno rozmowy
-	PluginLink.HookEvent(AQQ_CONTACTS_BUDDY_ACTIVETAB,OnActiveTab);
+	PluginLink.HookEvent(AQQ_CONTACTS_BUDDY_ACTIVETAB, OnActiveTab);
 	//Hook na wylaczenie auto-oddalania
-	PluginLink.HookEvent(AQQ_SYSTEM_AUTOMATION_AUTOAWAY_OFF,OnAutoAwayOff);
+	PluginLink.HookEvent(AQQ_SYSTEM_AUTOMATION_AUTOAWAY_OFF, OnAutoAwayOff);
 	//Hook na wlaczenie auto-oddalania
-	PluginLink.HookEvent(AQQ_SYSTEM_AUTOMATION_AUTOAWAY_ON,OnAutoAwayOn);
+	PluginLink.HookEvent(AQQ_SYSTEM_AUTOMATION_AUTOAWAY_ON, OnAutoAwayOn);
 	//Hook na zamkniecie okna rozmowy lub zakladki
-	PluginLink.HookEvent(AQQ_CONTACTS_BUDDY_CLOSETAB,OnCloseTab);
+	PluginLink.HookEvent(AQQ_CONTACTS_BUDDY_CLOSETAB, OnCloseTab);
 	//Hook na odtwarzanie dzwiekow
-	PluginLink.HookEvent(AQQ_SYSTEM_PLAYSOUND,OnPlaySound);
+	PluginLink.HookEvent(AQQ_SYSTEM_PLAYSOUND, OnPlaySound);
 	//Hook na odbieranie nowej wiadomosci
-	PluginLink.HookEvent(AQQ_CONTACTS_RECVMSG,OnRecvMsg);
+	PluginLink.HookEvent(AQQ_CONTACTS_RECVMSG, OnRecvMsg);
 	//Hook na zamkniecie/otwarcie okien
-	PluginLink.HookEvent(AQQ_SYSTEM_WINDOWEVENT,OnWindowEvent);
+	PluginLink.HookEvent(AQQ_SYSTEM_WINDOWEVENT, OnWindowEvent);
 	//Wszystkie moduly zostaly zaladowane
-	if(PluginLink.CallService(AQQ_SYSTEM_MODULESLOADED,0,0))
+	if(PluginLink.CallService(AQQ_SYSTEM_MODULESLOADED, 0, 0))
 	{
 		//Hook na pobieranie aktywnych zakladek
-		PluginLink.HookEvent(AQQ_CONTACTS_BUDDY_FETCHALLTABS,OnFetchAllTabs);
-		PluginLink.HookEvent(AQQ_CONTACTS_BUDDY_PRIMARYTAB,OnPrimaryTab);
+		PluginLink.HookEvent(AQQ_CONTACTS_BUDDY_FETCHALLTABS, OnFetchAllTabs);
+		PluginLink.HookEvent(AQQ_CONTACTS_BUDDY_PRIMARYTAB, OnPrimaryTab);
 		//Pobieranie aktywnych zakladek
-		PluginLink.CallService(AQQ_CONTACTS_BUDDY_FETCHALLTABS,0,0);
+		PluginLink.CallService(AQQ_CONTACTS_BUDDY_FETCHALLTABS, 0, 0);
 		//Usuniecie hooka na pobieranie aktywnych zakladek
 		PluginLink.UnhookEvent(OnPrimaryTab);
 		PluginLink.UnhookEvent(OnFetchAllTabs);

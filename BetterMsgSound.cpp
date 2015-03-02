@@ -382,7 +382,7 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 	PluginInfo.cbSize = sizeof(TPluginInfo);
 	PluginInfo.ShortName = L"BetterMsgSound";
 	PluginInfo.Version = PLUGIN_MAKE_VERSION(1,1,0,0);
-	PluginInfo.Description = L"Udoskonala dŸwiêkow¹ informacjê o nowej wiadomoœci poprzez odtwarzanie jej tylko gdy okno rozmowy bêdzie nieaktywne lub zak³adka z kontaktem nie bêdzie otwarta oraz kiedy bêdziemy nieaktywni.";
+	PluginInfo.Description = L"Udoskonala dŸwiêkow¹ informacjê o nowej wiadomoœci poprzez odtwarzanie jej tylko, gdy okno rozmowy bêdzie nieaktywne, zak³adka z kontaktem nie bêdzie otwarta lub kiedy bêdziemy nieaktywni.";
 	PluginInfo.Author = L"Krzysztof Grochocki";
 	PluginInfo.AuthorMail = L"kontakt@beherit.pl";
 	PluginInfo.Copyright = L"Krzysztof Grochocki";

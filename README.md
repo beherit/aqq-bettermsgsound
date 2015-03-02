@@ -1,5 +1,5 @@
 # BetterMsgSound
-BetterMsgSound jest wtyczką do komunikatora [AQQ](http://www.aqq.eu/pl.php). Udoskonala dźwiękową informację o nowej wiadomości poprzez odtwarzanie jej tylko gdy okno rozmowy będzie nieaktywne lub zakładka z kontaktem nie będzie otwarta oraz kiedy będziemy nieaktywni.
+BetterMsgSound jest wtyczką do komunikatora [AQQ](http://www.aqq.eu/pl.php). Udoskonala dźwiękową informację o nowej wiadomości poprzez odtwarzanie jej tylko, gdy okno rozmowy będzie nieaktywne, zakładka z kontaktem nie będzie otwarta lub kiedy będziemy nieaktywni.
 
 ### Wymagania
 Do skompilowania wtyczki BetterMsgSound potrzebne jest:

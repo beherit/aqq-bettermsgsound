@@ -1,0 +1,4 @@
+PL:
+Udoskonala dŸwiêkow¹ informacjê o nowej wiadomoœci poprzez odtwarzanie jej tylko, gdy okno rozmowy bêdzie nieaktywne, zak³adka z kontaktem nie bêdzie otwarta lub kiedy bêdziemy nieaktywni.
+EN:
+Improves sound information about the new message by playing it only when the chat window is inactive, tab with contact isn't opened or when we're inactive.

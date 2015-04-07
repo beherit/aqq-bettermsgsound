@@ -1,9 +1,9 @@
 //---------------------------------------------------------------------------
-// Copyright (C) 2014 Krzysztof Grochocki
+// Copyright (C) 2015 Krzysztof Grochocki
 //
 // This file is part of BetterMsgSound
 //
-// BetterMsgSound is free software; you can redistribute it and/or modify
+// BetterMsgSound is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 3, or (at your option)
 // any later version.
@@ -14,9 +14,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with GNU Radio; see the file COPYING. If not, write to
-// the Free Software Foundation, Inc., 51 Franklin Street,
-// Boston, MA 02110-1301, USA.
+// along with GNU Radio. If not, see <http://www.gnu.org/licenses/>.
 //---------------------------------------------------------------------------
 
 #include <vcl.h>
